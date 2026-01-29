@@ -190,6 +190,76 @@ This behavior ensures that:
 
 </details>
 
+## Date Handling
+
+Family Chart stores dates as strings without any automatic formatting. This gives you full control over date display, but you need to be careful when parsing dates to avoid timezone issues.
+
+### The Year-Only Date Problem
+
+A common bug occurs when year-only dates (like "1995") are parsed using JavaScript's `Date` constructor:
+
+```javascript
+// DON'T do this - causes timezone bugs!
+const date = new Date("1995")  // Creates January 1, 1995 00:00:00 UTC
+date.toLocaleDateString()       // May show "December 31, 1994" in US timezones!
+```
+
+### Date Utilities
+
+Family Chart provides date utilities to handle dates safely:
+
+```javascript
+import { parseDate, formatDate, dateUtils } from 'family-chart'
+
+// Parse a date string with precision tracking
+const yearOnly = parseDate("1995")
+// { precision: "year", year: 1995, month: null, day: null, isValid: true }
+
+const fullDate = parseDate("1995-03-15")
+// { precision: "day", year: 1995, month: 3, day: 15, isValid: true }
+
+// Format dates based on their precision
+formatDate("1995")           // "1995" (just the year)
+formatDate("1995-03")        // "March 1995"
+formatDate("1995-03-15")     // "March 15, 1995"
+```
+
+### Supported Date Formats
+
+The date utilities recognize these formats:
+- Year only: `"1995"`, `"2020"`
+- Year-month: `"1995-03"`, `"03/1995"`
+- Full date (ISO): `"1995-03-15"`
+- Full date (US): `"03/15/1995"`
+
+### Custom Date Display
+
+For custom date display on cards, use the date utilities in your card display function:
+
+```javascript
+import { createChart, formatDate } from 'family-chart'
+
+const chart = createChart('#FamilyChart', data)
+  .setCardHtml()
+  .setCardDisplay([
+    ["first name", "last name"],
+    d => d.birthday ? formatDate(d.birthday) : ''
+  ])
+```
+
+### Sorting by Date
+
+Use `compareDates` for sorting people by birth date:
+
+```javascript
+import { compareDates } from 'family-chart'
+
+// Sort children by birth date
+chart.setSortChildrenFunction((a, b) =>
+  compareDates(a.data.birthday, b.data.birthday)
+)
+```
+
 ## Tips for Data Preparation
 
 ### Use the Visual Builder

@@ -14,6 +14,10 @@ export { default as cardHtml } from './core/cards/card-html'
 
 export { formatData, formatDataForExport } from "./store/format-data"
 
+// Date utilities for handling date parsing and formatting without timezone issues
+export * as dateUtils from "./utils/date"
+export { parseDate, formatDate, formatDateInfo, compareDates, createDateInfo } from "./utils/date"
+
 
 
 // deprecated

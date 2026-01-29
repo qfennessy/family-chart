@@ -9,3 +9,6 @@ export { EditTree } from '../core/edit'
 export { AddRelative } from '../core/add-relative'
 export { CardSvg } from '../core/cards/card-svg'
 export { CardHtml } from '../core/cards/card-html'
+
+// Date utility types
+export type { DateInfo, DatePrecision } from '../utils/date'
